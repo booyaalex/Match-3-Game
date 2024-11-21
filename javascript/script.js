@@ -43,7 +43,6 @@ window.onload = () => {
 		mouseUp(e);
 	}); 
 	setupGame();
-  checkForMatch();
 	
 	requestAnimationFrame(update);
 };
@@ -75,6 +74,8 @@ function update() {
       }
     }
   }
+  
+  checkForMatch();
 }
 
 //This Function Draws the Grid Background
@@ -177,27 +178,40 @@ function swapSymbols(symbol1, symbol2) {
 }
 
 //This Function Will Check for any Mathces
-function checkForMatch() {
-	let pos;
+async function checkForMatch() {
+	let matchCount = 0;
+  
+  //Check Vertical
 	for(let row = 0; row < gridSize - 2; row++) {
   	for(let column = 0; column < gridSize; column++) {
   		if ( logic.grid[row][column] != 0 && 
       logic.grid[row][column] == logic.grid[row+1][column] &&
       logic.grid[row][column] == logic.grid[row+2][column]) {
-      		removeSymbolFromPos(row, column);
+      		matchCount++;
+      		await removeSymbolFromPos(row, column);
+          await removeSymbolFromPos(row + 1, column);
+          await removeSymbolFromPos(row + 2, column);
       }
   	}
   }
+  
+  //Check Horizontal
   for(let row = 0; row < gridSize; row++) {
   	for(let column = 0; column < gridSize - 2; column++) {
   		if ( logic.grid[row][column] != 0 && 
       logic.grid[row][column] == logic.grid[row][column+1] &&
       logic.grid[row][column] == logic.grid[row][column+2]) {
-      	//console.log(logic.grid[row][column]);
-      	//console.log(`${row}, ${column}`);
+      		matchCount++;
+      		await removeSymbolFromPos(row, column);
+          await removeSymbolFromPos(row, column + 1);
+          await removeSymbolFromPos(row, column + 2);
       }
   	}
   }
+  if(matchCount > 0) {
+  	return true;
+  }
+  return false;
 }
 
 //This Function Drags a Symbol if it's Clicked on
@@ -247,6 +261,12 @@ async function mouseUp(e) {
       Math.abs(newX - symbol.xPos) != Math.abs(newY - symbol.yPos)) {
           const swapSymbol = getSymbolFromPos(newX, newY);
         	await swapSymbols(symbol, swapSymbol);
+          
+					checkForMatch().then(async (foundMatch) => {
+          	if(!foundMatch) {
+        			await swapSymbols(swapSymbol, symbol);
+          	}
+        	});      
       } else {
       	symbol.x = symbol.xPos * symbols.width;
         symbol.y = symbol.yPos * symbols.height;
