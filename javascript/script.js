@@ -85,6 +85,8 @@ function update() {
     	}
     }
   });
+  
+  document.getElementById("score").innerHTML = `Score: ${logic.score}`;
 }
 
 //This Function Draws the Grid Background
@@ -111,25 +113,31 @@ function drawBackground() {
 function drawSymbol(symbol) {
 	ctx.beginPath();
 	if(symbol.type == 1) {
-		ctx.fillStyle = "red";
+		ctx.strokeStyle = "red";
+    ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
 	}
   else if (symbol.type == 2) {
-  	ctx.fillStyle = "blue";
+  	ctx.strokeStyle = "blue";
+    ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   }
   else if (symbol.type == 3) {
-  	ctx.fillStyle = "green";
+  	ctx.strokeStyle = "green";
+    ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   }
   else if (symbol.type == 4) {
-  	ctx.fillStyle = "purple";
+  	ctx.strokeStyle = "purple";
+    ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   }
   else if (symbol.type == 5) {
-  	ctx.fillStyle = "orange";
+  	ctx.strokeStyle = "orange";
+    ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   }
   else if (symbol.type == 6) {
-  	ctx.fillStyle = "yellow";
+  	ctx.strokeStyle = "yellow";
+    ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   }
-  ctx.fillRect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   ctx.closePath();
+  ctx.stroke();
 }
 
 //The Function Creates a Symbol Object and Stores it into symbols.symbolArray
@@ -158,7 +166,7 @@ function getSymbolFromPos(xPos, yPos) {
 	return symbols.symbolArray.find((obj) => obj.xPos == xPos && obj.yPos == yPos);
 }
 
-
+//This Function Removes a Symbol From symbols.symbolArray that has a specified set of coordinates
 function removeSymbolFromPos(xPos, yPos) {
 	let pos;
 	pos = symbols.symbolArray.indexOf(getSymbolFromPos(xPos, yPos));
@@ -196,6 +204,7 @@ async function checkForMatch() {
   		if ( logic.grid[row][column] != 0 && 
       logic.grid[row][column] == logic.grid[row+1][column] &&
       logic.grid[row][column] == logic.grid[row+2][column]) {
+      		logic.score += 30;
       		matchCount++;
       		await removeSymbolFromPos(row, column);
           await removeSymbolFromPos(row + 1, column);
@@ -210,6 +219,7 @@ async function checkForMatch() {
   		if ( logic.grid[row][column] != 0 && 
       logic.grid[row][column] == logic.grid[row][column+1] &&
       logic.grid[row][column] == logic.grid[row][column+2]) {
+      		logic.score += 30;
       		matchCount++;
       		await removeSymbolFromPos(row, column);
           await removeSymbolFromPos(row, column + 1);
@@ -223,7 +233,7 @@ async function checkForMatch() {
   return false;
 }
 
-
+//This Adds new Symbols When There is Blank Space
 function dropTheSymbols() {
 	for(const pos of logic.grid) {
   	if (pos[0] == 0) {
@@ -293,6 +303,7 @@ async function mouseUp(e) {
   }
 }
 
+//This Function Generates a Random Number
 function randomNumber(max) {
 	return Math.floor(Math.random() * max);
 }
