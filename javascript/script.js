@@ -113,31 +113,31 @@ function drawBackground() {
 function drawSymbol(symbol) {
 	ctx.beginPath();
 	if(symbol.type == 1) {
-		ctx.strokeStyle = "red";
+		ctx.fillStyle = "red";
     ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
 	}
   else if (symbol.type == 2) {
-  	ctx.strokeStyle = "blue";
+  	ctx.fillStyle = "blue";
     ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   }
   else if (symbol.type == 3) {
-  	ctx.strokeStyle = "green";
+  	ctx.fillStyle = "green";
     ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   }
   else if (symbol.type == 4) {
-  	ctx.strokeStyle = "purple";
+  	ctx.fillStyle = "purple";
     ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   }
   else if (symbol.type == 5) {
-  	ctx.strokeStyle = "orange";
+  	ctx.fillStyle = "orange";
     ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   }
   else if (symbol.type == 6) {
-  	ctx.strokeStyle = "yellow";
+  	ctx.fillStyle = "yellow";
     ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   }
   ctx.closePath();
-  ctx.stroke();
+  ctx.fill();
 }
 
 //The Function Creates a Symbol Object and Stores it into symbols.symbolArray
