@@ -75,7 +75,16 @@ function update() {
     }
   }
   
-  checkForMatch();
+  checkForMatch().then((foundMatch) => {
+  	if(!foundMatch) {
+    	for(const row of logic.grid) {
+    		if(row.includes(0)) {
+    			dropTheSymbols();
+          break;
+    		}
+    	}
+    }
+  });
 }
 
 //This Function Draws the Grid Background
@@ -212,6 +221,15 @@ async function checkForMatch() {
   	return true;
   }
   return false;
+}
+
+
+function dropTheSymbols() {
+	for(const pos of logic.grid) {
+  	if (pos[0] == 0) {
+    	makeSymbol(randomNumber(6) + 1, logic.grid.indexOf(pos), 0);
+    }
+  }
 }
 
 //This Function Drags a Symbol if it's Clicked on
