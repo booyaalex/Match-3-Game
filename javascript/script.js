@@ -15,16 +15,16 @@ var logic = {
 	keys: [],
   score: 0,
   grid: [
-  [false, false, false, false, false, false, false, false, false, false],
-  [false, false, false, false, false, false, false, false, false, false],
-  [false, false, false, false, false, false, false, false, false, false], 
-  [false, false, false, false, false, false, false, false, false, false], 
-  [false, false, false, false, false, false, false, false, false, false], 
-  [false, false, false, false, false, false, false, false, false, false], 
-  [false, false, false, false, false, false, false, false, false, false], 
-  [false, false, false, false, false, false, false, false, false, false], 
-  [false, false, false, false, false, false, false, false, false, false], 
-  [false, false, false, false, false, false, false, false, false, false]],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
 	mouseX: 0,
   mouseY: 0
 };  
@@ -50,7 +50,7 @@ window.onload = () => {
 function setupGame() {
   for(let row = 0; row < gridSize; row++) {
   	for(let column = 0; column < gridSize; column++) {
-  		makeSymbol(randomNumber(6), row, column);
+  		makeSymbol(randomNumber(6) + 1, row, column);
  	 	}
   }
 }
@@ -65,9 +65,9 @@ function update() {
     drawSymbol(symbol);
     
     if(symbol.yPos < 9) {
-    	if(logic.grid[symbol.xPos][symbol.yPos + 1] != true) {
-      	logic.grid[symbol.xPos][symbol.yPos] = false;
-        logic.grid[symbol.xPos][symbol.yPos + 1] = true;
+    	if(logic.grid[symbol.xPos][symbol.yPos + 1] == 0) {
+      	logic.grid[symbol.xPos][symbol.yPos] = symbol.type;
+        logic.grid[symbol.xPos][symbol.yPos + 1] = 0;
         
         symbol.yPos++;
         symbol.y = symbol.yPos * symbols.height;
@@ -99,22 +99,22 @@ function drawBackground() {
 //This Funciton Draws the Symbols on the Canvas
 function drawSymbol(symbol) {
 	ctx.beginPath();
-	if(symbol.type == 0) {
+	if(symbol.type == 1) {
 		ctx.fillStyle = "red";
 	}
-  else if (symbol.type == 1) {
+  else if (symbol.type == 2) {
   	ctx.fillStyle = "blue";
   }
-  else if (symbol.type == 2) {
+  else if (symbol.type == 3) {
   	ctx.fillStyle = "green";
   }
-  else if (symbol.type == 3) {
+  else if (symbol.type == 4) {
   	ctx.fillStyle = "purple";
   }
-  else if (symbol.type == 4) {
+  else if (symbol.type == 5) {
   	ctx.fillStyle = "orange";
   }
-  else if (symbol.type == 5) {
+  else if (symbol.type == 6) {
   	ctx.fillStyle = "yellow";
   }
   ctx.fillRect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
@@ -131,7 +131,7 @@ function makeSymbol(type, x, y) {
     yPos: y,
     selected: false
   };
-  logic.grid[x][y] = true;
+  logic.grid[x][y] = type;
   symbols.symbolArray.push(symbol);
 }
 
@@ -158,6 +158,25 @@ function swapSymbols(symbol1, symbol2) {
   symbol2.x = placeholder.xPos * symbols.width;
  	symbol2.yPos = placeholder.yPos;
   symbol2.y = placeholder.yPos * symbols.height;
+}
+
+
+function checkForMatch() {
+/*
+	for row = 0 to 2:
+    for col = 0 to 6:
+        if board[row][col] != 0 and
+           board[row][col] == board[row+1][col] and
+           board[row][col] == board[row+2][col] and
+           board[row][col] == board[row+3][col]:
+               return board[row][col]
+               */
+               
+	for(let row = 0; row < gridSize; row++) {
+  	for(let column = 0; column < gridSize; column++) {
+  		//if (logic.grid[row][column] != 0 &&)
+  	}
+  }
 }
 
 //This Function Drags a Symbol if it's Clicked on
@@ -205,9 +224,9 @@ async function mouseUp(e) {
     	if (Math.abs(newX - symbol.xPos) <= 1 && 
       Math.abs(newY - symbol.yPos) <= 1 &&
       Math.abs(newX - symbol.xPos) != Math.abs(newY - symbol.yPos)) {
-      	if (!logic.grid[newX][newY]) {
-      	logic.grid[symbol.xPos][symbol.yPos] = false;
-        logic.grid[newX][newY] = true;
+      	if (logic.grid[newX][newY] == 0) {
+      	logic.grid[symbol.xPos][symbol.yPos] = 0;
+        logic.grid[newX][newY] = symbol.type;
         
       	symbol.xPos = newX;
       	symbol.x = symbol.xPos * symbols.width;
