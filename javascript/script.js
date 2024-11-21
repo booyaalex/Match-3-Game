@@ -7,12 +7,12 @@ var board = {
   height: canvas.height
 };
 var symbols = {
-  width: board.width / gridSize,
+	width: board.width / gridSize,
   height: board.height / gridSize,
   symbolArray: []
 };
 var logic = {
-  keys: [],
+	keys: [],
   score: 0,
   grid: [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -67,8 +67,8 @@ function update() {
     
     if(symbol.yPos < 9) {
     	if(logic.grid[symbol.xPos][symbol.yPos + 1] == 0) {
-      	logic.grid[symbol.xPos][symbol.yPos] = symbol.type;
-        logic.grid[symbol.xPos][symbol.yPos + 1] = 0;
+      	logic.grid[symbol.xPos][symbol.yPos] = 0;
+        logic.grid[symbol.xPos][symbol.yPos + 1] = symbol.type;
         
         symbol.yPos++;
         symbol.y = symbol.yPos * symbols.height;
@@ -143,6 +143,19 @@ function getPosition(symbol) {
     ctx.closePath();
 }
 
+//Get a Symbol From a Pair of Coordinates
+function getSymbolFromPos(xPos, yPos) {
+	return symbols.symbolArray.find((obj) => obj.xPos == xPos && obj.yPos == yPos);
+}
+
+
+function removeSymbolFromPos(xPos, yPos) {
+	let pos;
+	pos = symbols.symbolArray.indexOf(getSymbolFromPos(xPos, yPos));
+  symbols.symbolArray.splice(pos, 1);
+  logic.grid[xPos][yPos] = 0;
+}
+
 //This Function Swaps the Positions of two Symbols
 function swapSymbols(symbol1, symbol2) {
 	const placeholder = {
@@ -163,15 +176,25 @@ function swapSymbols(symbol1, symbol2) {
   symbol2.y = placeholder.yPos * symbols.height;
 }
 
-
+//This Function Will Check for any Mathces
 function checkForMatch() {
+	let pos;
 	for(let row = 0; row < gridSize - 2; row++) {
   	for(let column = 0; column < gridSize; column++) {
   		if ( logic.grid[row][column] != 0 && 
       logic.grid[row][column] == logic.grid[row+1][column] &&
       logic.grid[row][column] == logic.grid[row+2][column]) {
-      	console.log(logic.grid[row][column]);
-      	console.log(`${row}, ${column}`);
+      		removeSymbolFromPos(row, column);
+      }
+  	}
+  }
+  for(let row = 0; row < gridSize; row++) {
+  	for(let column = 0; column < gridSize - 2; column++) {
+  		if ( logic.grid[row][column] != 0 && 
+      logic.grid[row][column] == logic.grid[row][column+1] &&
+      logic.grid[row][column] == logic.grid[row][column+2]) {
+      	//console.log(logic.grid[row][column]);
+      	//console.log(`${row}, ${column}`);
       }
   	}
   }
@@ -222,7 +245,7 @@ async function mouseUp(e) {
     	if (Math.abs(newX - symbol.xPos) <= 1 && 
       Math.abs(newY - symbol.yPos) <= 1 &&
       Math.abs(newX - symbol.xPos) != Math.abs(newY - symbol.yPos)) {
-          const swapSymbol = symbols.symbolArray.find((obj) => obj.xPos == newX && obj.yPos == newY);
+          const swapSymbol = getSymbolFromPos(newX, newY);
         	await swapSymbols(symbol, swapSymbol);
       } else {
       	symbol.x = symbol.xPos * symbols.width;
