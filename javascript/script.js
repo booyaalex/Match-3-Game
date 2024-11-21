@@ -7,12 +7,12 @@ var board = {
   height: canvas.height
 };
 var symbols = {
-	width: board.width / gridSize,
+  width: board.width / gridSize,
   height: board.height / gridSize,
   symbolArray: []
 };
 var logic = {
-	keys: [],
+  keys: [],
   score: 0,
   grid: [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -43,6 +43,7 @@ window.onload = () => {
 		mouseUp(e);
 	}); 
 	setupGame();
+  checkForMatch();
 	
 	requestAnimationFrame(update);
 };
@@ -149,11 +150,13 @@ function swapSymbols(symbol1, symbol2) {
     yPos: symbol1.yPos
   };
   
+  logic.grid[symbol2.xPos][symbol2.yPos] = symbol1.type;
   symbol1.xPos = symbol2.xPos;
   symbol1.x = symbol2.xPos * symbols.width;
  	symbol1.yPos = symbol2.yPos;
   symbol1.y = symbol2.yPos * symbols.height;
   
+  logic.grid[placeholder.xPos][placeholder.yPos] = symbol2.type;
   symbol2.xPos = placeholder.xPos;
   symbol2.x = placeholder.xPos * symbols.width;
  	symbol2.yPos = placeholder.yPos;
@@ -162,19 +165,14 @@ function swapSymbols(symbol1, symbol2) {
 
 
 function checkForMatch() {
-/*
-	for row = 0 to 2:
-    for col = 0 to 6:
-        if board[row][col] != 0 and
-           board[row][col] == board[row+1][col] and
-           board[row][col] == board[row+2][col] and
-           board[row][col] == board[row+3][col]:
-               return board[row][col]
-               */
-               
-	for(let row = 0; row < gridSize; row++) {
+	for(let row = 0; row < gridSize - 2; row++) {
   	for(let column = 0; column < gridSize; column++) {
-  		//if (logic.grid[row][column] != 0 &&)
+  		if ( logic.grid[row][column] != 0 && 
+      logic.grid[row][column] == logic.grid[row+1][column] &&
+      logic.grid[row][column] == logic.grid[row+2][column]) {
+      	console.log(logic.grid[row][column]);
+      	console.log(`${row}, ${column}`);
+      }
   	}
   }
 }
@@ -224,19 +222,8 @@ async function mouseUp(e) {
     	if (Math.abs(newX - symbol.xPos) <= 1 && 
       Math.abs(newY - symbol.yPos) <= 1 &&
       Math.abs(newX - symbol.xPos) != Math.abs(newY - symbol.yPos)) {
-      	if (logic.grid[newX][newY] == 0) {
-      	logic.grid[symbol.xPos][symbol.yPos] = 0;
-        logic.grid[newX][newY] = symbol.type;
-        
-      	symbol.xPos = newX;
-      	symbol.x = symbol.xPos * symbols.width;
-      
-      	symbol.yPos = newY;
-      	symbol.y = symbol.yPos * symbols.height;
-      } else {
           const swapSymbol = symbols.symbolArray.find((obj) => obj.xPos == newX && obj.yPos == newY);
         	await swapSymbols(symbol, swapSymbol);
-      	}  
       } else {
       	symbol.x = symbol.xPos * symbols.width;
         symbol.y = symbol.yPos * symbols.height;
