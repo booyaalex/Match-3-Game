@@ -112,32 +112,27 @@ function drawBackground() {
 //This Funciton Draws the Symbols on the Canvas
 function drawSymbol(symbol) {
 	ctx.beginPath();
+  ctx.lineWidth = 5;
 	if(symbol.type == 1) {
 		ctx.fillStyle = "red";
-    ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
 	}
   else if (symbol.type == 2) {
   	ctx.fillStyle = "blue";
-    ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   }
   else if (symbol.type == 3) {
   	ctx.fillStyle = "green";
-    ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   }
   else if (symbol.type == 4) {
   	ctx.fillStyle = "purple";
-    ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   }
   else if (symbol.type == 5) {
   	ctx.fillStyle = "orange";
-    ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   }
   else if (symbol.type == 6) {
   	ctx.fillStyle = "yellow";
-    ctx.rect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   }
+  ctx.fillRect(symbol.x + 2, symbol.y + 2, symbols.width - 6, symbols.height - 6);
   ctx.closePath();
-  ctx.fill();
 }
 
 //The Function Creates a Symbol Object and Stores it into symbols.symbolArray
